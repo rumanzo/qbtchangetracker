@@ -11,16 +11,18 @@ import (
 	"sync"
 )
 
-func decodetorrentfile(path string) map[string]interface{} {
+func decodetorrentfile(path string) (map[string]interface{}, error) {
 	dat, err := ioutil.ReadFile(path)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 	var torrent map[string]interface{}
 	if err := bencode.DecodeBytes([]byte(dat), &torrent); err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
-	return torrent
+	return torrent, nil
 }
 
 func encodetorrentfile(path string, newstructure map[string]interface{}) error {
@@ -39,21 +41,31 @@ func encodetorrentfile(path string, newstructure map[string]interface{}) error {
 	enc := bencode.NewEncoder(bufferedWriter)
 	if err := enc.Encode(newstructure); err != nil {
 		log.Fatal(err)
+		return err
 	}
 	bufferedWriter.Flush()
 	return nil
 }
 
-func changetracker(oldtracker *string, newtracker *string, path string, wg *sync.WaitGroup) {
+func changetracker(oldtracker *string, newtracker *string, path string, wg *sync.WaitGroup) error {
 	defer wg.Done()
-	fastresume := decodetorrentfile(path)
+	fastresume, err := decodetorrentfile(path)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
 	for num, list := range fastresume["trackers"].([]interface{}) {
 		if list.([]interface{})[0] == *oldtracker {
 			fastresume["trackers"].([]interface{})[num].([]interface{})[0] = *newtracker
 			fmt.Printf("Changed tracker in %v\n", path)
-			encodetorrentfile(path, fastresume)
+			err = encodetorrentfile(path, fastresume)
+			if err != nil {
+				log.Fatal(err)
+				return err
+			}
 		}
 	}
+	return nil
 }
 
 func main() {
