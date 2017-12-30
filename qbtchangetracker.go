@@ -1,13 +1,13 @@
 package main
 
 import (
-	"log"
-	"fmt"
-	"path/filepath"
-	"io/ioutil"
-	"github.com/zeebo/bencode"
-	"os"
 	"bufio"
+	"fmt"
+	"github.com/zeebo/bencode"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
 	"sync"
 )
 
@@ -44,8 +44,7 @@ func encodetorrentfile(path string, newstructure map[string]interface{}) error {
 	return nil
 }
 
-
-func changetracker(oldtracker *string, newtracker *string, path string, wg *sync.WaitGroup)  {
+func changetracker(oldtracker *string, newtracker *string, path string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	fastresume := decodetorrentfile(path)
 	for num, list := range fastresume["trackers"].([]interface{}) {
@@ -69,10 +68,10 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Enter old tracker: ")
 	oldtracker, _ := reader.ReadString('\n')
-	oldtracker = oldtracker[:len(oldtracker) - 2]
+	oldtracker = oldtracker[:len(oldtracker)-2]
 	fmt.Print("Enter new tracker: ")
 	newtracker, _ := reader.ReadString('\n')
-	newtracker = newtracker[:len(newtracker) - 2]
+	newtracker = newtracker[:len(newtracker)-2]
 	if err != nil {
 		log.Fatal(err)
 	}
