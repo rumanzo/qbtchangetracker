@@ -56,11 +56,6 @@ func changetracker(oldtracker *string, newtracker *string, path string, wg *sync
 	}
 }
 
-func echo(file string, wg *sync.WaitGroup) {
-	defer wg.Done()
-	fmt.Println(file)
-}
-
 func main() {
 	var wg sync.WaitGroup
 	directory := os.Getenv("LOCALAPPDATA") + "\\qBittorrent\\BT_backup\\"
