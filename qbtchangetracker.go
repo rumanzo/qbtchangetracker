@@ -73,15 +73,17 @@ func main() {
 	directory := os.Getenv("LOCALAPPDATA") + "\\qBittorrent\\BT_backup\\"
 	files, err := filepath.Glob(directory + "*fastresume")
 	reader := bufio.NewReader(os.Stdin)
+	if err != nil {
+		log.Fatal(err)
+		fmt.Print("Fatal error! Pres Enter to exit")
+		reader.ReadString('\n')
+	}
 	fmt.Print("Enter old tracker: ")
 	oldtracker, _ := reader.ReadString('\n')
 	oldtracker = oldtracker[:len(oldtracker)-2]
 	fmt.Print("Enter new tracker: ")
 	newtracker, _ := reader.ReadString('\n')
 	newtracker = newtracker[:len(newtracker)-2]
-	if err != nil {
-		log.Fatal(err)
-	}
 	for _, file := range files {
 		go changetracker(&oldtracker, &newtracker, file, &wg)
 		wg.Add(1)
