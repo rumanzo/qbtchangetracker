@@ -9,7 +9,9 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/user"
 	"path/filepath"
+	"runtime"
 	"runtime/debug"
 	"strings"
 	"sync"
@@ -89,9 +91,30 @@ func changetracker(oldtracker *string, newtracker *string, trfile string, frfile
 func main() {
 	var wg sync.WaitGroup
 	var qbitdir, oldtracker, newtracker string
-	gnuflag.StringVar(&qbitdir, "directory", os.Getenv("LOCALAPPDATA")+"\\qBittorrent\\BT_backup\\",
+
+	sep := string(os.PathSeparator)
+	switch OS := runtime.GOOS; OS {
+	case "windows":
+		qbitdir = os.Getenv("LOCALAPPDATA") + sep + "qBittorrent" + sep + "BT_backup" + sep
+		qbitdir = strings.Join([]string{os.Getenv("LOCALAPPDATA"), "qBittorrent", "BT_backup"}, sep)
+	case "darwin":
+		usr, err := user.Current()
+		if err != nil {
+			panic(err)
+		}
+		qbitdir = strings.Join([]string{ usr.HomeDir, "Library", "Application Support", "QBittorrent", "BT_backup"}, sep)
+	case "linux":
+		usr, err := user.Current()
+		if err != nil {
+			panic(err)
+		}
+		qbitdir = strings.Join([]string{ usr.HomeDir, ".local", "share", "data", "qBittorrent", "BT_backup"}, sep)
+	}
+
+
+	gnuflag.StringVar(&qbitdir, "directory", qbitdir,
 		"Destination directory BT_backup (as default)")
-	gnuflag.StringVar(&qbitdir, "d", os.Getenv("LOCALAPPDATA")+"\\qBittorrent\\BT_backup\\",
+	gnuflag.StringVar(&qbitdir, "d", qbitdir,
 		"Destination directory BT_backup (as default)")
 	gnuflag.StringVar(&oldtracker, "oldtracker", "",
 		"Old tracker")
