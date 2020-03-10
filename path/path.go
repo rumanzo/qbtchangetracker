@@ -32,15 +32,27 @@ func PathReplace(replacepattren *[]Replace, trfile string, frfile string, wg *sy
 		return
 	}
 	torrentname := torrent["info"].(map[string]interface{})["name"].(string)
+	changed := false
 	for _, pattern := range *replacepattren {
-		fastresume["qBt-savePath"] = strings.ReplaceAll(fastresume["qBt-savePath"].(string), pattern.From, pattern.To)
-		fastresume["save_path"] = strings.ReplaceAll(fastresume["save_path"].(string), pattern.From, pattern.To)
+		newqBtsavePath := strings.ReplaceAll(fastresume["qBt-savePath"].(string), pattern.From, pattern.To)
+		if fastresume["qBt-savePath"] != newqBtsavePath {
+			fastresume["qBt-savePath"] = newqBtsavePath
+			changed = true
+		}
+		newsavepath := strings.ReplaceAll(fastresume["save_path"].(string), pattern.From, pattern.To)
+		if fastresume["save_path"] != newsavepath {
+			fastresume["save_path"] = newsavepath
+			changed = true
+		}
 	}
 	err = libtorrent.EncodeTorrentFile(frfile, fastresume)
 	if err != nil {
 		errChannel <- fmt.Errorf("Can't encode fastresume file %v. Error: %v", frfile, err)
 		return
 	}
-	comChannel <- fmt.Sprintf("Changed save path for torrent: %-15v", torrentname)
+	if changed {
+		comChannel <- fmt.Sprintf("Changed save path for torrent: %-15v", torrentname)
+	}
+
 	return
 }

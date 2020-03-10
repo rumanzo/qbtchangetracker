@@ -27,10 +27,12 @@ func ChangeTracker(oldtracker *string, newtracker *string, trfile string, frfile
 		return
 	}
 	torrentname := torrent["info"].(map[string]interface{})["name"].(string)
+	changed := false
 	for num, list := range fastresume["trackers"].([]interface{}) {
 		for n, tracker := range list.([]interface{}) {
 			if tracker == *oldtracker {
 				fastresume["trackers"].([]interface{})[num].([]interface{})[n] = *newtracker
+				changed = true
 			}
 		}
 	}
@@ -39,6 +41,8 @@ func ChangeTracker(oldtracker *string, newtracker *string, trfile string, frfile
 		errChannel <- fmt.Errorf("Can't encode fastresume file %v. Error: %v", frfile, err)
 		return
 	}
-	comChannel <- fmt.Sprintf("Changed tracker for torrent: %-15v", torrentname)
+	if changed {
+		comChannel <- fmt.Sprintf("Changed tracker for torrent: %-15v", torrentname)
+	}
 	return
 }
