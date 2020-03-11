@@ -32,6 +32,12 @@ Usage of C:\Users\user\go\src\qbtchangetracker\qbtchangetracker_v1.0_amd64.exe:
     New tracker
 -o, --oldtracker (= "")
     Old tracker
+--replace (= "")
+    Replace paths.
+        Delimiter for replaces - ;
+        Delimiter for from/to - ,
+        Example: "D:\films,/home/user/films;\,/"
+        If you use path separator different from you system, declare it mannually
 ```
 
 Usage examples:
