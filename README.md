@@ -36,7 +36,7 @@ Usage of C:\Users\user\go\src\qbtchangetracker\qbtchangetracker_v1.0_amd64.exe:
     Replace paths.
         Delimiter for replaces - ;
         Delimiter for from/to - ,
-        Example: "D:\films,/home/user/films;\,/"
+        Example: --replace (= "D:\films,/home/user/films;E:\music,/home/user/music")
         If you use path separator different from you system, declare it mannually
 ```
 
