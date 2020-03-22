@@ -53,7 +53,7 @@ func main() {
 		"New tracker")
 	gnuflag.StringVar(&replace, "replace", "", "Replace paths.\n	"+
 		"Delimiter for replaces - ;\n	"+
-		"Delimiter for from/to - ,\n	Example: \"D:\\films,/home/user/films;\\,/\"\n	"+
+		"Delimiter for from/to - ,\n	Example: --replace \"D:\\films,/home/user/films;E:\\music,/home/user/music\"\n	"+
 		"If you use path separator different from you system, declare it mannually")
 	gnuflag.Parse(true)
 
