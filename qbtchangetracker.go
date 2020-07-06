@@ -46,6 +46,7 @@ func main() {
 		}
 		flags.QBitDir = strings.Join([]string{usr.HomeDir, ".local", "share", "data", "qBittorrent", "BT_backup"}, sep)
 	}
+
 	parser := goflags.NewParser(&flags, goflags.Default)
 	if _, err := parser.Parse(); err != nil { // https://godoc.org/github.com/jessevdk/go-flags#ErrorType
 		if flagsErr, ok := err.(*goflags.Error); ok && flagsErr.Type == goflags.ErrHelp {
