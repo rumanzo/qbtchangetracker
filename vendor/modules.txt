@@ -1,9 +1,11 @@
 # github.com/fatih/color v1.9.0
 ## explicit
 github.com/fatih/color
+# github.com/jessevdk/go-flags v1.4.0
+## explicit
+github.com/jessevdk/go-flags
 # github.com/juju/gnuflag v0.0.0-20171113085948-2ce1bb71843d
 ## explicit
-github.com/juju/gnuflag
 # github.com/mattn/go-colorable v0.1.4
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.11

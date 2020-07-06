@@ -12,7 +12,7 @@ type Replace struct {
 	From, To string
 }
 
-func PathReplace(replacepattren *[]Replace, trfile string, frfile string, wg *sync.WaitGroup, comChannel chan string, errChannel chan error) {
+func PathReplace(replacepattren *[]Replace, trfile string, frfile string, separator string, wg *sync.WaitGroup, comChannel chan string, errChannel chan error) {
 	defer wg.Done()
 	defer func() {
 		if r := recover(); r != nil {
@@ -45,6 +45,29 @@ func PathReplace(replacepattren *[]Replace, trfile string, frfile string, wg *sy
 			changed = true
 		}
 	}
+
+	var oldsep string
+	switch separator {
+	case "\\":
+		oldsep = "/"
+	case "/":
+		oldsep = "\\"
+	}
+	newqBtsavePath := strings.ReplaceAll(fastresume["qBt-savePath"].(string), oldsep, separator)
+	if fastresume["qBt-savePath"] != newqBtsavePath {
+		fastresume["qBt-savePath"] = newqBtsavePath
+		changed = true
+	}
+	if _, ok := fastresume["mapped_files"]; ok {
+		for num, entry := range fastresume["mapped_files"].([]interface{}) {
+			newentry := strings.ReplaceAll(entry.(string), oldsep, separator)
+			if entry != newentry {
+				fastresume["mapped_files"].([]interface{})[num] = newentry
+				changed = true
+			}
+		}
+	}
+
 	err = libtorrent.EncodeTorrentFile(frfile, fastresume)
 	if err != nil {
 		errChannel <- fmt.Errorf("Can't encode fastresume file %v. Error: %v", frfile, err)
