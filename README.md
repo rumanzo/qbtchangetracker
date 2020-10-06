@@ -24,27 +24,28 @@ Help:
 Help (from cmd or powerwhell)
 
 ```
-PS C:\qbtchangetracker> .\qbtchangetracker_v1.4_amd64.exe -h
+PS C:\Downloads>qbtchangetracker_v1.4_amd64.exe -h
 Usage:
-  C:\qbtchangetracker\qbtchangetracker.exe [OPTIONS]
+  qbtchangetracker_v1.4_amd64.exe [OPTIONS]
 
 Application Options:
-  /d, /directory:   Destination directory BT_backup (as default) (default:
+  -d, --directory=  Destination directory BT_backup (as default) (default:
                     C:\Users\user\AppData\Local\qBittorrent\BT_backup)
-  /o, /oldtracker:  Old tracker
-  /n, /newtracker:  New tracker
-  /r, /replace:     Replace paths.
+  -o, --oldtracker= Old tracker
+  -n, --newtracker= New tracker
+  -r, --replace=    Replace paths.
                     Delimiter for from/to is comma - ,
                     Example: -r "D:\films,/home/user/films" -r
                     "D:\music,/home/user/music"
 
-      /sep:         Default path separator that will use in all paths. You may
+      --sep=        Default path separator that will use in all paths. You may
                     need use this flag if you migrating from windows to linux
                     in some cases (default: \)
 
 Help Options:
-  /?                Show this help message
-  /h, /help         Show this help message
+  -h, --help        Show this help message
+
+
 ```
 
 Usage examples:
@@ -52,7 +53,7 @@ Usage examples:
 
 - If you just run application, it will processing torrents from %APPDATA%\uTorrent\ to %LOCALAPPDATA%\qBittorrent\BT_BACKUP\ and ask interactively old tracker and new tracker
 ```
-PS C:\qbtchangetracker> .\qbtchangetracker.exe
+PS C:\qbtchangetracker> .\qbtchangetracker_v1.4_amd64.exe
 Enter old tracker: oldtracker
 Enter new tracker: newtracker
 Check that the qBittorrent is turned off and the directory C:\Users\user\AppData\Local\qBittorrent\BT_backup\ and is backed up.
@@ -66,7 +67,7 @@ Press Enter to start
 
 - Run application from cmd or powershell with keys, if you want change source dir or destination dir, or export/import behavior
 ```
-PS C:\qbtchangetracker> .\qbtchangetracker_v1.4_amd64.exe -h -d C:\temp\BT_backup\ -o oldtracker -n newtracker
+PS C:\qbtchangetracker> .\qbtchangetracker_v1.4_amd64.exe -d C:\temp\BT_backup\ -o oldtracker -n newtracker
 Check that the qBittorrent is turned off and the directory C:\temp\BT_backup\ and is backed up.
 
 Press Enter to start

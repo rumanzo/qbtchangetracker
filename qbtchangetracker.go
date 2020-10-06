@@ -69,12 +69,11 @@ func main() {
 	}
 
 	files, _ := filepath.Glob(flags.QBitDir + "*fastresume")
-	comChannel := make(chan string, len(files))
-	errChannel := make(chan error, len(files))
+	comChannel := make(chan string, len(files)*2)
+	errChannel := make(chan error, len(files)*2)
 
 	var replacepatterns []path.Replace
-
-	if len(flags.Replaces) != 0 || sepdefined != nil {
+	if len(flags.Replaces) != 0 || sepdefined.IsSet() == true {
 		for _, str := range flags.Replaces {
 			patterns := strings.Split(str, ",")
 			if len(patterns) < 2 {
@@ -98,7 +97,7 @@ func main() {
 	fmt.Println("Press Enter to start")
 	fmt.Scanln()
 	log.Println("Started")
-	if len(flags.Replaces) != 0 || sepdefined != nil {
+	if len(flags.Replaces) != 0 || sepdefined.IsSet() == true {
 		for _, frfile := range files {
 			trfile := strings.TrimSuffix(frfile, filepath.Ext(frfile)) + ".torrent"
 			if _, err := os.Stat(trfile); os.IsNotExist(err) {
@@ -107,17 +106,18 @@ func main() {
 			go path.PathReplace(&replacepatterns, trfile, frfile, flags.PathSeparator, &wg, comChannel, errChannel)
 			wg.Add(1)
 		}
-		goto End
+		wg.Wait()
 	}
-	for _, frfile := range files {
-		trfile := strings.TrimSuffix(frfile, filepath.Ext(frfile)) + ".torrent"
-		if _, err := os.Stat(trfile); os.IsNotExist(err) {
-			continue
+	if flags.OldTracker != "" || flags.NewTracker != "" {
+		for _, frfile := range files {
+			trfile := strings.TrimSuffix(frfile, filepath.Ext(frfile)) + ".torrent"
+			if _, err := os.Stat(trfile); os.IsNotExist(err) {
+				continue
+			}
+			go tracker.ChangeTracker(&flags.OldTracker, &flags.NewTracker, trfile, frfile, &wg, comChannel, errChannel)
+			wg.Add(1)
 		}
-		go tracker.ChangeTracker(&flags.OldTracker, &flags.NewTracker, trfile, frfile, &wg, comChannel, errChannel)
-		wg.Add(1)
 	}
-End:
 	waserrors := false
 	numjob := 1
 	go func() {

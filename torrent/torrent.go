@@ -14,7 +14,7 @@ func DecodeFastresumeFile(path string) (map[string]interface{}, error) {
 		return nil, err
 	}
 	var torrent map[string]interface{}
-	if err := bencode.DecodeBytes([]byte(dat), &torrent); err != nil {
+	if err := bencode.DecodeBytes(dat, &torrent); err != nil {
 		return nil, err
 	}
 	return torrent, nil
