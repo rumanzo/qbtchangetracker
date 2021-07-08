@@ -7,6 +7,7 @@ qbtchangetracker is cli tool for iterative change trackers in qBittorrent fastre
 	- [Feature](#user-content-feature)
 	- [Help](#user-content-help)
 	- [Usage examples](#user-content-usage-examples)
+	- [Linux](#Linux)
 	- [Known issuses](#user-content-known-issuses)
 	
 Feature:
@@ -89,6 +90,18 @@ Press Enter to start
 2  Changed save path for torrent: torrentname2
 Press Enter to exit
 ```
+
+Linux:
+----------------
+
+Downlod the Linux binary from [Releases](https://github.com/rumanzo/qbtchangetracker/releases) page and add execute permission. For example:
+```
+cd ~/.local/share/data/qBittorrent/
+wget https://github.com/rumanzo/qbtchangetracker/releases/download/v1.4/qbtchangetracker_v1.4_amd64_linux
+chmod +x qbtchangetracker_v1.4_amd64_linux
+./qbtchangetracker_v1.4_amd64_linux --help
+```
+
 Known issuses:
 ---------------
  - Unknown
