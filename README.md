@@ -14,6 +14,7 @@ Feature:
 ---------
  - Processing all fastresume files
  - Multithreading
+ - Deleting trackers (just enter empty line to new tracker)
 
 
 > [!IMPORTANT]

@@ -23,7 +23,10 @@ type Flags struct {
 	NewTracker    string   `short:"n" long:"newtracker" description:"New tracker"`
 	Replaces      []string `short:"r" long:"replace" description:"Replace paths.\n	Delimiter for from/to is comma - ,\n	Example: -r \"D:\\films,/home/user/films\" -r \"D:\\music,/home/user/music\"\n"`
 	PathSeparator string   `long:"sep" description:"Default path separator that will use in all paths. You may need use this flag if you migrating from windows to linux in some cases"`
+	Version       bool     `short:"v" long:"version" description:"Show version"`
 }
+
+var version, commit, buildImage string
 
 func main() {
 	var wg sync.WaitGroup
@@ -57,6 +60,10 @@ func main() {
 			os.Exit(1)
 		}
 	}
+	if flags.Version {
+		fmt.Printf("Version: %v\nCommit: %v\nGolang version: %v\nBuild image: %v\n", version, commit, runtime.Version(), buildImage)
+		os.Exit(0)
+	}
 	sepdefined := parser.FindOptionByLongName("sep")
 	if flags.QBitDir[len(flags.QBitDir)-1] != os.PathSeparator {
 		flags.QBitDir += string(os.PathSeparator)
@@ -86,10 +93,10 @@ func main() {
 			reader := bufio.NewReader(os.Stdin)
 			fmt.Print("Enter old tracker: ")
 			flags.OldTracker, _ = reader.ReadString('\n')
-			flags.OldTracker = flags.OldTracker[:len(flags.OldTracker)-2]
+			flags.OldTracker = strings.TrimSuffix(flags.OldTracker, "\n")
 			fmt.Print("Enter new tracker: ")
 			flags.NewTracker, _ = reader.ReadString('\n')
-			flags.NewTracker = flags.NewTracker[:len(flags.NewTracker)-2]
+			flags.NewTracker = strings.TrimSuffix(flags.NewTracker, "\n")
 		}
 	}
 	color.HiRed("Check that the qBittorrent is turned off and the directory %v and is backed up.\n\n",
